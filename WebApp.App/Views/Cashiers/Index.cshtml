@@ -17,7 +17,7 @@
             <tr class="table-secondary">
                 <th>Cashier Name</th>
                 <th>Branch Name</th>
-                <th></th>
+                <th width="200px"></th>
             </tr>
         </thead>
         <tbody>
@@ -26,8 +26,8 @@
                 <tr>
                     <td>@cashier.CashierName</td>
                     <td>@cashier.Branch.BranchName</td>
-                    <td class="text-center">
-                        <a asp-action="Update" asp-route-id="@cashier.Id" class="btn btn-success me-2">Edit</a>
+                    <td class="text-center d-flex justify-content-around">
+                        <a asp-action="Update" asp-route-id="@cashier.Id" class="btn btn-success">Edit</a>
                         <a asp-action="delete" asp-route-id="@cashier.Id" onclick="confirmDelete()" class="btn btn-danger">Delete</a>
                     </td>
                 </tr>

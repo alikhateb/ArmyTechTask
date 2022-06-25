@@ -16,7 +16,7 @@
         <thead>
             <tr class="table-secondary">
                 <th>City Name</th>
-                <th></th>
+                <th width="200px"></th>
             </tr>
         </thead>
         <tbody>
@@ -24,8 +24,8 @@
             {
                 <tr>
                     <td>@city.CityName</td>
-                    <td class="text-center">
-                        <a asp-action="Update" asp-route-id="@city.Id" class="btn btn-success me-2">Edit</a>
+                    <td class="text-center d-flex justify-content-around">
+                        <a asp-action="Update" asp-route-id="@city.Id" class="btn btn-success">Edit</a>
                         <a asp-action="delete" asp-route-id="@city.Id" onclick="confirmDelete()" class="btn btn-danger">Delete</a>
                     </td>
                 </tr>

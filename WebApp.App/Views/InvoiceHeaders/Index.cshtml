@@ -19,7 +19,7 @@
                 <th>Invoice Date</th>
                 <th>Cashier Name</th>
                 <th>Branch Name</th>
-                <th></th>
+                <th width="300px"></th>
             </tr>
         </thead>
         <tbody>
@@ -30,9 +30,9 @@
                     <td>@InvoiceHeader.Invoicedate</td>
                     <td>@InvoiceHeader.Cashier.CashierName</td>
                     <td>@InvoiceHeader.Branch.BranchName</td>
-                    <td class="text-center">
-                        <a asp-action="Details" asp-route-id="@InvoiceHeader.Id" class="btn btn-info me-2">Details</a>
-                        <a asp-action="Update" asp-route-id="@InvoiceHeader.Id" class="btn btn-success me-2">Edit</a>
+                    <td class="text-center d-flex justify-content-around">
+                        <a asp-action="Details" asp-route-id="@InvoiceHeader.Id" class="btn btn-info">Details</a>
+                        <a asp-action="Update" asp-route-id="@InvoiceHeader.Id" class="btn btn-success">Edit</a>
                         <a asp-action="delete" asp-route-id="@InvoiceHeader.Id" onclick="confirmDelete()" class="btn btn-danger">Delete</a>
                     </td>
                 </tr>
