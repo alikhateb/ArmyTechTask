@@ -1,0 +1,45 @@
+﻿@model InvoiceDetail
+
+@{
+    ViewData["Title"] = Model.Id == 0 ? "Add New Invoice Detail" : "Edit Invoice Detail";
+}
+
+<h1>@(Model.Id == 0 ? $"Add New Invoice Detail for Invoice Header Number {Model.InvoiceHeaderId}" : $"Edit Invoice Detail for Invoice Header Number {Model.InvoiceHeaderId}")</h1>
+<hr />
+<form asp-action="@(Model.Id == 0 ? "Add" : "Update")">
+    <input hidden asp-for="Id" />
+    <input hidden asp-for="InvoiceHeaderId" />
+    <input hidden name="returnUrl" value="@ViewBag.returnUrl" />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="mb-3 row">
+        <label asp-for="ItemName" class="col-sm-2 col-form-label"></label>
+        <div class="col-sm-10">
+            <input asp-for="ItemName" class="form-control" />
+            <span asp-validation-for="ItemName" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label asp-for="ItemCount" class="col-sm-2 col-form-label"></label>
+        <div class="col-sm-10">
+            <input asp-for="ItemCount" class="form-control" />
+            <span asp-validation-for="ItemCount" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label asp-for="ItemPrice" class="col-sm-2 col-form-label"></label>
+        <div class="col-sm-10">
+            <input asp-for="ItemPrice" class="form-control" />
+            <span asp-validation-for="ItemPrice" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="mt-5">
+        <input type="submit" class="btn btn-primary" />
+        @*<a href="@ViewBag.returnUrl" class="btn btn-dark">Back</a>*@
+        <a href='javascript:history.go(-1)' class="btn btn-dark">Back</a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

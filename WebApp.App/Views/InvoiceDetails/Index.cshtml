@@ -1,0 +1,33 @@
+﻿@model IEnumerable<InvoiceDetail>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Invoice Details</h2>
+<hr />
+<section>
+    <table class="table table-striped table-bordered border-dark w-100">
+        <thead class="table-dark">
+            <tr>
+                <td>Invoice Number</td>
+                <td>Order Name</td>
+                <td>Order count</td>
+                <td>Order Unit Price</td>
+                <td>Total</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var InvoiceDetail in Model)
+            {
+                <tr>
+                    <td>@InvoiceDetail.InvoiceHeaderId</td>
+                    <td>@InvoiceDetail.ItemName</td>
+                    <td>@InvoiceDetail.ItemCount</td>
+                    <td>@InvoiceDetail.ItemPrice.ToString("0.00") EGP</td>
+                    <td>@((InvoiceDetail.ItemPrice * InvoiceDetail.ItemCount).ToString("0.00")) EGP</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</section>

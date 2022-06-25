@@ -1,0 +1,52 @@
+﻿@model InvoiceHeaderViewModel
+
+@{
+    ViewData["Title"] = Model.InvoiceHeader.Id == 0 ? "Add New Invoice Header" : "Edit Invoice Header";
+}
+
+<h1>@(Model.InvoiceHeader.Id == 0 ? "Add New Invoice Header" : "Edit Invoice Header")</h1>
+<hr />
+<form asp-action="@(Model.InvoiceHeader.Id == 0 ? "Add" : "Update")">
+    <input hidden asp-for="InvoiceHeader.Id" />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="mb-3 row">
+        <label asp-for="InvoiceHeader.CustomerName" class="col-sm-2 col-form-label"></label>
+        <div class="col-sm-10">
+            <input asp-for="InvoiceHeader.CustomerName" class="form-control" />
+            <span asp-validation-for="InvoiceHeader.CustomerName" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label asp-for="InvoiceHeader.Invoicedate" class="col-sm-2 col-form-label"></label>
+        <div class="col-sm-10">
+            <input asp-for="InvoiceHeader.Invoicedate" class="form-control" />
+            <span asp-validation-for="InvoiceHeader.Invoicedate" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label asp-for="InvoiceHeader.BranchId" class="col-sm-2 col-form-label"></label>
+        <div class="col-sm-10">
+            <select class="form-select" asp-for="InvoiceHeader.BranchId" asp-items="@Model.BranchListItems">
+                <option>--Select Branch Name--</option>
+            </select>
+            <span asp-validation-for="InvoiceHeader.BranchId" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label asp-for="InvoiceHeader.CashierId" class="col-sm-2 col-form-label"></label>
+        <div class="col-sm-10">
+            <select class="form-select" asp-for="InvoiceHeader.CashierId" asp-items="@Model.CashierListItems">
+                <option>--Select Cashier Name--</option>
+            </select>
+            <span asp-validation-for="InvoiceHeader.CashierId" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="mt-5">
+        <input type="submit" class="btn btn-primary" />
+        <a asp-action="index" class="btn btn-dark">Back</a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
