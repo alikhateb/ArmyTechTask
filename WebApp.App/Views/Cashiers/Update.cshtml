@@ -1,0 +1,36 @@
+﻿@model CashierViewModel
+
+@{
+    ViewData["Title"] = "Edit Cashier";
+}
+
+<h1>Edit Cashier</h1>
+<hr />
+<form asp-action="update">
+    <input hidden asp-for="Cashier.Id" />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="mb-3 row">
+        <label asp-for="Cashier.CashierName" class="col-sm-2 col-form-label"></label>
+        <div class="col-sm-10">
+            <input asp-for="Cashier.CashierName" class="form-control" />
+            <span asp-validation-for="Cashier.CashierName" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label asp-for="Cashier.BranchId" class="col-sm-2 col-form-label"></label>
+        <div class="col-sm-10">
+            <select class="form-select" asp-for="Cashier.BranchId" asp-items="@Model.ListItems">
+                <option>--Select Branch Name--</option>
+            </select>
+            <span asp-validation-for="Cashier.BranchId" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="mt-5">
+        <input type="submit" class="btn btn-primary" />
+        <a asp-action="index" class="btn btn-dark">Back</a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

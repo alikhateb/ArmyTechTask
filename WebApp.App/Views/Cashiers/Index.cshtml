@@ -1,0 +1,48 @@
+﻿@model CashierViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<section class="d-flex justify-content-between">
+    <h2>Cashiers</h2>
+    <div>
+        <a asp-action="Add" class="btn btn-outline-primary">Add</a>
+    </div>
+</section>
+<hr />
+<section>
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr class="table-secondary">
+                <th>Cashier Name</th>
+                <th>Branch Name</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var cashier in Model.Cashiers)
+            {
+                <tr>
+                    <td>@cashier.CashierName</td>
+                    <td>@cashier.Branch.BranchName</td>
+                    <td class="text-center">
+                        <a asp-action="Update" asp-route-id="@cashier.Id" class="btn btn-success me-2">Edit</a>
+                        <a asp-action="delete" asp-route-id="@cashier.Id" onclick="confirmDelete()" class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</section>
+
+@section Scripts {
+    <script>
+        function confirmDelete() {
+            var decision = confirm("are you sure");
+            if (decision == false) {
+                event.preventDefault();
+            }
+        }
+    </script>
+}
