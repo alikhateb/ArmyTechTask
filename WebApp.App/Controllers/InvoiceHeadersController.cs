@@ -1,9 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using WebApp.DataAccess.UnitOfWork;
-using WebApp.Models.ViewModels;
-
-namespace WebApp.App.Controllers
+﻿namespace WebApp.App.Controllers
 {
     public class InvoiceHeadersController : Controller
     {
@@ -20,8 +15,8 @@ namespace WebApp.App.Controllers
 
         public IActionResult Index()
         {
-            InvoiceHeaderViewModel.InvoiceHeaders = _unitOfWork.InvoiceHeaderRepository.GetAll();
-            if (InvoiceHeaderViewModel.InvoiceHeaders is null)
+            InvoiceHeaderViewModel.InvoiceHeaders = _unitOfWork.InvoiceHeaderRepository.GetAll().ToList();
+            if (InvoiceHeaderViewModel.InvoiceHeaders == null)
                 return NotFound("no data found");
 
             return View(InvoiceHeaderViewModel);
@@ -30,7 +25,7 @@ namespace WebApp.App.Controllers
         public IActionResult Details(int id)
         {
             InvoiceHeaderViewModel.InvoiceHeader = _unitOfWork.InvoiceHeaderRepository.FindObject(x => x.Id == id);
-            if (InvoiceHeaderViewModel.InvoiceHeader is null)
+            if (InvoiceHeaderViewModel.InvoiceHeader == null)
                 return NotFound("no data found");
 
             InvoiceHeaderViewModel.TotalPrice = 0;
@@ -42,9 +37,11 @@ namespace WebApp.App.Controllers
             return View(InvoiceHeaderViewModel);
         }
 
+
+
         public IActionResult Add()
         {
-            LoadSelectListItems();
+            LoadBranchItems();
 
             return View("Add_Update", InvoiceHeaderViewModel);
         }
@@ -56,13 +53,13 @@ namespace WebApp.App.Controllers
         {
             if (!ModelState.IsValid)
             {
-                LoadSelectListItems();
+                LoadBranchItems();
 
                 return View("Add_Update", InvoiceHeaderViewModel);
             }
 
             _unitOfWork.InvoiceHeaderRepository.Add(InvoiceHeaderViewModel.InvoiceHeader);
-            _unitOfWork.Save();
+            _unitOfWork.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
 
@@ -70,9 +67,9 @@ namespace WebApp.App.Controllers
         {
             InvoiceHeaderViewModel.InvoiceHeader = _unitOfWork.InvoiceHeaderRepository.FindObject(x => x.Id == id);
 
-            LoadSelectListItems();
+            LoadBranchItems();
 
-            if (InvoiceHeaderViewModel.InvoiceHeader is null)
+            if (InvoiceHeaderViewModel.InvoiceHeader == null)
                 return NotFound("no data found");
 
             return View("Add_Update", InvoiceHeaderViewModel);
@@ -84,13 +81,13 @@ namespace WebApp.App.Controllers
         {
             if (!ModelState.IsValid)
             {
-                LoadSelectListItems();
+                LoadBranchItems();
 
                 return View("Add_Update", InvoiceHeaderViewModel);
             }
 
             _unitOfWork.InvoiceHeaderRepository.Update(InvoiceHeaderViewModel.InvoiceHeader);
-            _unitOfWork.Save();
+            _unitOfWork.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
 
@@ -99,11 +96,11 @@ namespace WebApp.App.Controllers
             try
             {
                 InvoiceHeaderViewModel.InvoiceHeader = _unitOfWork.InvoiceHeaderRepository.FindObject(x => x.Id == id);
-                if (InvoiceHeaderViewModel.InvoiceHeader is null)
+                if (InvoiceHeaderViewModel.InvoiceHeader == null)
                     return NotFound("no data found");
 
                 _unitOfWork.InvoiceHeaderRepository.Remove(InvoiceHeaderViewModel.InvoiceHeader);
-                _unitOfWork.Save();
+                _unitOfWork.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -112,21 +109,38 @@ namespace WebApp.App.Controllers
             }
         }
 
-        public void LoadSelectListItems()
+        public IActionResult LoadSpecificCashierSelectListItems(int branchId)
         {
-            InvoiceHeaderViewModel.BranchListItems = _unitOfWork.BranchRepository.GetAll().Select(branch => new SelectListItem
-            {
-                Text = branch.BranchName,
-                Value = branch.Id.ToString(),
-                Selected = InvoiceHeaderViewModel.InvoiceHeader is not null && InvoiceHeaderViewModel.InvoiceHeader.BranchId == branch.Id
-            }).ToList();
+            var listOfCashiers = _unitOfWork.CashierRepository.GetAll(cashier => cashier.BranchId == branchId)
+                .Select(cashier => new
+                {
+                    cashier.CashierName,
+                    CashierId = cashier.Id.ToString(),
+                }).ToList();
 
-            InvoiceHeaderViewModel.CashierListItems = _unitOfWork.CashierRepository.GetAll().Select(cashier => new SelectListItem
-            {
-                Text = cashier.CashierName,
-                Value = cashier.Id.ToString(),
-                Selected = InvoiceHeaderViewModel.InvoiceHeader is not null && InvoiceHeaderViewModel.InvoiceHeader.CashierId == cashier.Id
-            }).ToList();
+            return Ok(listOfCashiers);
         }
+
+        public void LoadBranchItems()
+        {
+            InvoiceHeaderViewModel.BranchListItems = _unitOfWork.BranchRepository.GetAll()
+                .Select(branch => new SelectListItem
+                {
+                    Text = branch.BranchName,
+                    Value = branch.Id.ToString(),
+                    Selected = InvoiceHeaderViewModel.InvoiceHeader != null && InvoiceHeaderViewModel.InvoiceHeader.BranchId == branch.Id,
+                }).ToList();
+        }
+
+        //public void LoadCashierItems(int branchId)
+        //{
+        //    InvoiceHeaderViewModel.CashierListItems = _unitOfWork.CashierRepository.GetAll(cashier => cashier.BranchId == branchId)
+        //        .Select(cashier => new SelectListItem
+        //        {
+        //            Text = cashier.CashierName,
+        //            Value = cashier.Id.ToString(),
+        //            Selected = InvoiceHeaderViewModel.InvoiceHeader != null && InvoiceHeaderViewModel.InvoiceHeader.CashierId == cashier.Id
+        //        }).ToList();
+        //}
     }
 }

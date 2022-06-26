@@ -1,26 +1,22 @@
-﻿using System.Linq.Expressions;
-using WebApp.DataAccess.Data;
-using WebApp.DataAccess.IRepository;
-
-namespace WebApp.DataAccess.Repository
+﻿namespace WebApp.DataAccess.Repository
 {
     public class BaseRepository<T> : IBaseRepository<T> where T : class
     {
-        private readonly AppDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public BaseRepository(AppDbContext context)
+        public BaseRepository(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        public IEnumerable<T> GetAll()
+        public IQueryable<T> GetAll()
         {
-            return _context.Set<T>().ToList();
+            return _context.Set<T>();
         }
 
-        public IEnumerable<T> GetAll(Expression<Func<T, bool>> filter)
+        public IQueryable<T> GetAll(Expression<Func<T, bool>> filter)
         {
-            return _context.Set<T>().Where(filter).ToList();
+            return _context.Set<T>().Where(filter);
         }
 
         public T FindObject(Expression<Func<T, bool>> filter)

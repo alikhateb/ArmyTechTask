@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using WebApp.DataAccess.UnitOfWork;
-using WebApp.Models;
-
-namespace WebApp.App.Controllers
+﻿namespace WebApp.App.Controllers
 {
     public class InvoiceDetailsController : Controller
     {
@@ -15,8 +11,8 @@ namespace WebApp.App.Controllers
 
         public IActionResult Index()
         {
-            var invoiceDetails = _unitOfWork.InvoiceDetailRepository.GetAll();
-            if (invoiceDetails is null)
+            var invoiceDetails = _unitOfWork.InvoiceDetailRepository.GetAll().ToList();
+            if (invoiceDetails == null)
                 return NotFound("no data found");
 
             return View(invoiceDetails);
@@ -45,7 +41,7 @@ namespace WebApp.App.Controllers
             }
 
             _unitOfWork.InvoiceDetailRepository.Add(invoiceDetail);
-            _unitOfWork.Save();
+            _unitOfWork.SaveChanges();
             return Redirect(returnUrl);
         }
 
@@ -55,7 +51,7 @@ namespace WebApp.App.Controllers
 
             InvoiceDetail invoiceDetail = _unitOfWork.InvoiceDetailRepository.FindObject(x => x.Id == id);
 
-            if (invoiceDetail is null)
+            if (invoiceDetail == null)
                 return NotFound("no data found");
 
             return View("Add_Update", invoiceDetail);
@@ -71,7 +67,7 @@ namespace WebApp.App.Controllers
             }
 
             _unitOfWork.InvoiceDetailRepository.Update(invoiceDetail);
-            _unitOfWork.Save();
+            _unitOfWork.SaveChanges();
             return Redirect(returnUrl);
         }
 
@@ -80,11 +76,11 @@ namespace WebApp.App.Controllers
             try
             {
                 InvoiceDetail invoiceDetail = _unitOfWork.InvoiceDetailRepository.FindObject(x => x.Id == invoiceDetailId);
-                if (invoiceDetail is null)
+                if (invoiceDetail == null)
                     return NotFound("no data found");
 
                 _unitOfWork.InvoiceDetailRepository.Remove(invoiceDetail);
-                _unitOfWork.Save();
+                _unitOfWork.SaveChanges();
                 return RedirectToAction(actionName: "Details", controllerName: "InvoiceHeaders", routeValues: new { id = invoiceHeaderId });
             }
             catch

@@ -1,7 +1,4 @@
-﻿using WebApp.DataAccess.IRepository;
-using WebApp.Models;
-
-namespace WebApp.DataAccess.UnitOfWork
+﻿namespace WebApp.DataAccess.UnitOfWork
 {
     public interface IUnitOfWork : IDisposable
     {
@@ -10,7 +7,6 @@ namespace WebApp.DataAccess.UnitOfWork
         IBaseRepository<City> CityRepository { get; }
         IBaseRepository<InvoiceHeader> InvoiceHeaderRepository { get; }
         IBaseRepository<InvoiceDetail> InvoiceDetailRepository { get; }
-
-        void Save();
+        void SaveChanges();
     }
 }

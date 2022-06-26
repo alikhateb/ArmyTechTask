@@ -1,15 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
-using WebApp.Models;
-
-namespace WebApp.DataAccess.Data
+﻿namespace WebApp.DataAccess.Data
 {
-    public partial class AppDbContext : DbContext
+    public partial class ApplicationDbContext : DbContext
     {
-        public AppDbContext()
+        public ApplicationDbContext()
         {
         }
 
-        public AppDbContext(DbContextOptions<AppDbContext> options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
         }

@@ -12,7 +12,7 @@ namespace WebApp.Models
         public int Id { get; set; }
 
         [Display(Name = "City Name")]
-        public string CityName { get; set; } = null!;
+        public string CityName { get; set; }
 
         public virtual ICollection<Branch> Branches { get; set; }
     }

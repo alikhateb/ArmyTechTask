@@ -1,9 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using WebApp.DataAccess.UnitOfWork;
-using WebApp.Models.ViewModels;
-
-namespace WebApp.App.Controllers
+﻿namespace WebApp.App.Controllers
 {
     public class CashiersController : Controller
     {
@@ -20,9 +15,9 @@ namespace WebApp.App.Controllers
 
         public IActionResult Index()
         {
-            CashierViewModel.Cashiers = _unitOfWork.CashierRepository.GetAll();
+            CashierViewModel.Cashiers = _unitOfWork.CashierRepository.GetAll().ToList();
 
-            if (CashierViewModel.Cashiers is null)
+            if (CashierViewModel.Cashiers == null)
                 return NotFound("no data found");
 
             return View(CashierViewModel);
@@ -48,7 +43,7 @@ namespace WebApp.App.Controllers
             }
 
             _unitOfWork.CashierRepository.Add(CashierViewModel.Cashier);
-            _unitOfWork.Save();
+            _unitOfWork.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
 
@@ -58,7 +53,7 @@ namespace WebApp.App.Controllers
 
             LoadSelectListItems();
 
-            if (CashierViewModel.Cashier is null)
+            if (CashierViewModel.Cashier == null)
                 return NotFound("no data found");
 
             return View(CashierViewModel);
@@ -76,7 +71,7 @@ namespace WebApp.App.Controllers
             }
 
             _unitOfWork.CashierRepository.Update(CashierViewModel.Cashier);
-            _unitOfWork.Save();
+            _unitOfWork.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
 
@@ -85,11 +80,11 @@ namespace WebApp.App.Controllers
             try
             {
                 CashierViewModel.Cashier = _unitOfWork.CashierRepository.FindObject(x => x.Id == id);
-                if (CashierViewModel.Cashier is null)
+                if (CashierViewModel.Cashier == null)
                     return NotFound("no data found");
 
                 _unitOfWork.CashierRepository.Remove(CashierViewModel.Cashier);
-                _unitOfWork.Save();
+                _unitOfWork.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -100,12 +95,13 @@ namespace WebApp.App.Controllers
 
         public void LoadSelectListItems()
         {
-            CashierViewModel.ListItems = _unitOfWork.BranchRepository.GetAll().Select(branch => new SelectListItem
-            {
-                Text = branch.BranchName,
-                Value = branch.Id.ToString(),
-                Selected = CashierViewModel.Cashier is not null && CashierViewModel.Cashier.BranchId == branch.Id
-            }).ToList();
+            CashierViewModel.ListItems = _unitOfWork.BranchRepository.GetAll()
+                .Select(branch => new SelectListItem
+                {
+                    Text = branch.BranchName,
+                    Value = branch.Id.ToString(),
+                    Selected = CashierViewModel.Cashier != null && CashierViewModel.Cashier.BranchId == branch.Id
+                }).ToList();
         }
     }
 }

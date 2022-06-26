@@ -13,12 +13,12 @@ namespace WebApp.Models
         public int Id { get; set; }
 
         [Display(Name = "Branch Name")]
-        public string BranchName { get; set; } = null!;
+        public string BranchName { get; set; }
 
         [Display(Name = "City Name")]
         public int CityId { get; set; }
 
-        public virtual City? City { get; set; } = null!;
+        public virtual City? City { get; set; }
         public virtual ICollection<Cashier> Cashiers { get; set; }
         public virtual ICollection<InvoiceHeader> InvoiceHeaders { get; set; }
     }

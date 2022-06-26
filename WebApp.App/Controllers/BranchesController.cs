@@ -1,9 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using WebApp.DataAccess.UnitOfWork;
-using WebApp.Models.ViewModels;
-
-namespace WebApp.App.Controllers
+﻿namespace WebApp.App.Controllers
 {
     public class BranchesController : Controller
     {
@@ -20,9 +15,9 @@ namespace WebApp.App.Controllers
 
         public IActionResult Index()
         {
-            BranchViewModel.Branches = _unitOfWork.BranchRepository.GetAll();
+            BranchViewModel.Branches = _unitOfWork.BranchRepository.GetAll().ToList();
 
-            if (BranchViewModel.Branches is null)
+            if (BranchViewModel.Branches == null)
                 return NotFound("no data found");
 
             return View(BranchViewModel);
@@ -48,7 +43,7 @@ namespace WebApp.App.Controllers
             }
 
             _unitOfWork.BranchRepository.Add(BranchViewModel.Branch);
-            _unitOfWork.Save();
+            _unitOfWork.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
 
@@ -58,7 +53,7 @@ namespace WebApp.App.Controllers
 
             LoadSelectListItems();
 
-            if (BranchViewModel.Branch is null)
+            if (BranchViewModel.Branch == null)
                 return NotFound("no data found");
 
             return View(BranchViewModel);
@@ -76,7 +71,7 @@ namespace WebApp.App.Controllers
             }
 
             _unitOfWork.BranchRepository.Update(BranchViewModel.Branch);
-            _unitOfWork.Save();
+            _unitOfWork.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
 
@@ -85,11 +80,11 @@ namespace WebApp.App.Controllers
             try
             {
                 BranchViewModel.Branch = _unitOfWork.BranchRepository.FindObject(x => x.Id == id);
-                if (BranchViewModel.Branch is null)
+                if (BranchViewModel.Branch == null)
                     return NotFound("no data found");
 
                 _unitOfWork.BranchRepository.Remove(BranchViewModel.Branch);
-                _unitOfWork.Save();
+                _unitOfWork.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -100,12 +95,13 @@ namespace WebApp.App.Controllers
 
         public void LoadSelectListItems()
         {
-            BranchViewModel.ListItems = _unitOfWork.CityRepository.GetAll().Select(city => new SelectListItem
-            {
-                Text = city.CityName,
-                Value = city.Id.ToString(),
-                Selected = BranchViewModel.Branch is not null && BranchViewModel.Branch.CityId == city.Id
-            }).ToList();
+            BranchViewModel.ListItems = _unitOfWork.CityRepository.GetAll()
+                .Select(city => new SelectListItem
+                {
+                    Text = city.CityName,
+                    Value = city.Id.ToString(),
+                    Selected = BranchViewModel.Branch != null && BranchViewModel.Branch.CityId == city.Id
+                }).ToList();
         }
     }
 }

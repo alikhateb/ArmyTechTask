@@ -1,15 +1,10 @@
-﻿using WebApp.DataAccess.Data;
-using WebApp.DataAccess.IRepository;
-using WebApp.DataAccess.Repository;
-using WebApp.Models;
-
-namespace WebApp.DataAccess.UnitOfWork
+﻿namespace WebApp.DataAccess.UnitOfWork
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly AppDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public UnitOfWork(AppDbContext context)
+        public UnitOfWork(ApplicationDbContext context)
         {
             _context = context;
             BranchRepository = new BaseRepository<Branch>(context);
@@ -25,7 +20,7 @@ namespace WebApp.DataAccess.UnitOfWork
         public IBaseRepository<InvoiceHeader> InvoiceHeaderRepository { get; private set; }
         public IBaseRepository<InvoiceDetail> InvoiceDetailRepository { get; private set; }
 
-        public void Save()
+        public void SaveChanges()
         {
             _context.SaveChanges();
         }

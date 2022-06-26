@@ -1,18 +1,14 @@
-using Microsoft.EntityFrameworkCore;
-using WebApp.DataAccess.Data;
-using WebApp.DataAccess.UnitOfWork;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddDbContext<AppDbContext>(options =>
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
-    options.UseLazyLoadingProxies().UseSqlServer(
-        builder.Configuration.GetConnectionString("ConnectionStrings"),
-        b => b.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)
-        );
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionStrings"), sqlOptions =>
+    {
+        sqlOptions.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName);
+    }).UseLazyLoadingProxies();
 });
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();

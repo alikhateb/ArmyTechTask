@@ -27,16 +27,16 @@
         <label asp-for="InvoiceHeader.BranchId" class="col-sm-2 col-form-label"></label>
         <div class="col-sm-10">
             <select class="form-select" asp-for="InvoiceHeader.BranchId" asp-items="@Model.BranchListItems">
-                <option>--Select Branch Name--</option>
+                <option value="0">--Select Branch Name--</option>
             </select>
             <span asp-validation-for="InvoiceHeader.BranchId" class="text-danger"></span>
         </div>
     </div>
-    <div class="mb-3 row">
-        <label asp-for="InvoiceHeader.CashierId" class="col-sm-2 col-form-label"></label>
+    <div class="mb-3 row d-none" id="cashier-container">
+        <label for="InvoiceHeader_CashierId" class="col-sm-2 col-form-label">Cashier Name</label>
         <div class="col-sm-10">
-            <select class="form-select" asp-for="InvoiceHeader.CashierId" asp-items="@Model.CashierListItems">
-                <option>--Select Cashier Name--</option>
+            <select class="form-select" id="InvoiceHeader_CashierId" name="InvoiceHeader.CashierId">
+                <option value="0">--Select Cashier Name--</option>
             </select>
             <span asp-validation-for="InvoiceHeader.CashierId" class="text-danger"></span>
         </div>
@@ -49,4 +49,5 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript" src="~/js/site.js"></script>
 }
