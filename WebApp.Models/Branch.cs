@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace WebApp.Models
+﻿namespace WebApp.Models
 {
     public partial class Branch
     {
@@ -16,6 +14,7 @@ namespace WebApp.Models
         public string BranchName { get; set; }
 
         [Display(Name = "City Name")]
+        [Range(1, int.MaxValue)]
         public int CityId { get; set; }
 
         public virtual City? City { get; set; }

@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-
-namespace WebApp.Models.ViewModels
+﻿namespace WebApp.Models.ViewModels
 {
     public class CashierViewModel
     {

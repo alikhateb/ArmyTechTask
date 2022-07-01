@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace WebApp.Models
+﻿namespace WebApp.Models
 {
     public partial class InvoiceHeader
     {
@@ -18,9 +16,11 @@ namespace WebApp.Models
         public DateTime Invoicedate { get; set; }
 
         [Display(Name = "Cashier Name")]
+        [Range(1, int.MaxValue)]
         public int? CashierId { get; set; }
 
         [Display(Name = "Branch Name")]
+        [Range(1, int.MaxValue)]
         public int BranchId { get; set; }
 
         public virtual Branch? Branch { get; set; }

@@ -5,9 +5,9 @@
 }
 
 <section class="d-flex justify-content-between">
-    <h3>Details Invoice Header Number : @Model.InvoiceHeader.Id</h3>
+    <h3>Details Invoice Header Number : @Model.Id</h3>
     <div>
-        <a asp-controller="InvoiceDetails" asp-action="Add" asp-route-invoiceHeaderId="@Model.InvoiceHeader.Id" class="btn btn-outline-primary">Add Invoice Detail</a>
+        <a asp-controller="InvoiceDetails" asp-action="Add" asp-route-invoiceHeaderId="@Model.Id" class="btn btn-outline-primary">Add Invoice Detail</a>
     </div>
 </section>
 <hr />
@@ -15,9 +15,9 @@
     <div class="card-header">
         <div class="row">
             <div class="col-3">Customer Name</div>
-            <div class="col-3">@Model.InvoiceHeader.CustomerName</div>
+            <div class="col-3">@Model.CustomerName</div>
             <div class="offset-2 col-3">Invoice Number</div>
-            <div class="col-1">@Model.InvoiceHeader.Id</div>
+            <div class="col-1">@Model.Id</div>
         </div>
     </div>
     <div class="card-body">
@@ -33,7 +33,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var InvoiceDetail in Model.InvoiceHeader.InvoiceDetails)
+                @foreach (var InvoiceDetail in Model.InvoiceDetails)
                 {
                     <tr>
                         <td>@InvoiceDetail.Id</td>
@@ -46,7 +46,7 @@
                                 <i class="bi bi-pencil-square"></i> Edit
                             </a> |
                             <a class="text-decoration-none text-danger ms-2" asp-route-invoiceDetailId="@InvoiceDetail.Id"
-                           asp-route-invoiceHeaderId="@Model.InvoiceHeader.Id" asp-controller="InvoiceDetails" asp-action="Delete" onclick="confirmDelete()">
+                           asp-route-invoiceHeaderId="@Model.Id" asp-controller="InvoiceDetails" asp-action="Delete" onclick="confirmDelete()">
                                 <i class="bi bi-trash3"></i> Delete
                             </a>
                         </td>

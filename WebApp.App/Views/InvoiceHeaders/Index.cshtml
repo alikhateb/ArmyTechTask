@@ -1,4 +1,4 @@
-﻿@model InvoiceHeaderViewModel
+﻿@model IEnumerable<InvoiceHeader>
 
 @{
     ViewData["Title"] = "Index";
@@ -17,19 +17,19 @@
             <tr class="table-secondary">
                 <th>Customer Name</th>
                 <th>Invoice Date</th>
-                <th>Cashier Name</th>
                 <th>Branch Name</th>
+                <th>Cashier Name</th>
                 <th width="300px"></th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var InvoiceHeader in Model.InvoiceHeaders)
+            @foreach (var InvoiceHeader in Model)
             {
                 <tr>
                     <td>@InvoiceHeader.CustomerName</td>
                     <td>@InvoiceHeader.Invoicedate</td>
-                    <td>@InvoiceHeader.Cashier.CashierName</td>
                     <td>@InvoiceHeader.Branch.BranchName</td>
+                    <td>@InvoiceHeader.Cashier.CashierName</td>
                     <td class="text-center d-flex justify-content-around">
                         <a asp-action="Details" asp-route-id="@InvoiceHeader.Id" class="btn btn-info">Details</a>
                         <a asp-action="Update" asp-route-id="@InvoiceHeader.Id" class="btn btn-success">Edit</a>

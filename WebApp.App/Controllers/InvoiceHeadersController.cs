@@ -3,10 +3,12 @@
     public class InvoiceHeadersController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public InvoiceHeadersController(IUnitOfWork unitOfWork)
+        public InvoiceHeadersController(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
             InvoiceHeaderViewModel = new InvoiceHeaderViewModel();
         }
 
@@ -15,21 +17,23 @@
 
         public IActionResult Index()
         {
-            InvoiceHeaderViewModel.InvoiceHeaders = _unitOfWork.InvoiceHeaderRepository.GetAll().ToList();
-            if (InvoiceHeaderViewModel.InvoiceHeaders == null)
+            var invoiceHeaders = _unitOfWork.InvoiceHeaderRepository.GetAll().ToList();
+            if (invoiceHeaders == null)
                 return NotFound("no data found");
 
-            return View(InvoiceHeaderViewModel);
+            return View(invoiceHeaders);
         }
 
         public IActionResult Details(int id)
         {
-            InvoiceHeaderViewModel.InvoiceHeader = _unitOfWork.InvoiceHeaderRepository.FindObject(x => x.Id == id);
-            if (InvoiceHeaderViewModel.InvoiceHeader == null)
+            var invoiceHeader = _unitOfWork.InvoiceHeaderRepository.FindObject(x => x.Id == id);
+            if (invoiceHeader == null)
                 return NotFound("no data found");
 
+            InvoiceHeaderViewModel = _mapper.Map<InvoiceHeaderViewModel>(invoiceHeader);
+
             InvoiceHeaderViewModel.TotalPrice = 0;
-            foreach (var item in InvoiceHeaderViewModel.InvoiceHeader.InvoiceDetails)
+            foreach (var item in InvoiceHeaderViewModel.InvoiceDetails)
             {
                 InvoiceHeaderViewModel.TotalPrice += item.ItemCount * item.ItemPrice;
             }
@@ -58,19 +62,20 @@
                 return View("Add_Update", InvoiceHeaderViewModel);
             }
 
-            _unitOfWork.InvoiceHeaderRepository.Add(InvoiceHeaderViewModel.InvoiceHeader);
+            var invoiceHeader = _mapper.Map<InvoiceHeader>(InvoiceHeaderViewModel);
+            _unitOfWork.InvoiceHeaderRepository.Add(invoiceHeader);
             _unitOfWork.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Update(int id)
         {
-            InvoiceHeaderViewModel.InvoiceHeader = _unitOfWork.InvoiceHeaderRepository.FindObject(x => x.Id == id);
-
-            LoadBranchItems();
-
-            if (InvoiceHeaderViewModel.InvoiceHeader == null)
+            var invoiceHeader = _unitOfWork.InvoiceHeaderRepository.FindObject(x => x.Id == id);
+            if (invoiceHeader == null)
                 return NotFound("no data found");
+
+            InvoiceHeaderViewModel = _mapper.Map<InvoiceHeaderViewModel>(invoiceHeader);
+            LoadBranchItems();
 
             return View("Add_Update", InvoiceHeaderViewModel);
         }
@@ -86,7 +91,8 @@
                 return View("Add_Update", InvoiceHeaderViewModel);
             }
 
-            _unitOfWork.InvoiceHeaderRepository.Update(InvoiceHeaderViewModel.InvoiceHeader);
+            var invoiceHeader = _mapper.Map<InvoiceHeader>(InvoiceHeaderViewModel);
+            _unitOfWork.InvoiceHeaderRepository.Update(invoiceHeader);
             _unitOfWork.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
@@ -95,11 +101,11 @@
         {
             try
             {
-                InvoiceHeaderViewModel.InvoiceHeader = _unitOfWork.InvoiceHeaderRepository.FindObject(x => x.Id == id);
-                if (InvoiceHeaderViewModel.InvoiceHeader == null)
+                var invoiceHeader = _unitOfWork.InvoiceHeaderRepository.FindObject(x => x.Id == id);
+                if (invoiceHeader == null)
                     return NotFound("no data found");
 
-                _unitOfWork.InvoiceHeaderRepository.Remove(InvoiceHeaderViewModel.InvoiceHeader);
+                _unitOfWork.InvoiceHeaderRepository.Remove(invoiceHeader);
                 _unitOfWork.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
@@ -128,7 +134,7 @@
                 {
                     Text = branch.BranchName,
                     Value = branch.Id.ToString(),
-                    Selected = InvoiceHeaderViewModel.InvoiceHeader != null && InvoiceHeaderViewModel.InvoiceHeader.BranchId == branch.Id,
+                    Selected = InvoiceHeaderViewModel != null && InvoiceHeaderViewModel.BranchId == branch.Id,
                 }).ToList();
         }
 
@@ -141,6 +147,15 @@
         //            Value = cashier.Id.ToString(),
         //            Selected = InvoiceHeaderViewModel.InvoiceHeader != null && InvoiceHeaderViewModel.InvoiceHeader.CashierId == cashier.Id
         //        }).ToList();
+        //}
+
+        //if (!_unitOfWork.CashierRepository.GetAll(b => b.BranchId == InvoiceHeaderViewModel.BranchId)
+        //    .Any(c => c.Id == InvoiceHeaderViewModel.CashierId))
+        //{
+        //    LoadBranchItems();
+        //    ModelState.AddModelError("", $"{_unitOfWork.CashierRepository.FindObject(c => c.Id == InvoiceHeaderViewModel.CashierId).CashierName} " +
+        //        $"does not exist in {_unitOfWork.BranchRepository.FindObject(c => c.Id == InvoiceHeaderViewModel.BranchId).BranchName}!");
+        //    return View("Add_Update", InvoiceHeaderViewModel);
         //}
     }
 }

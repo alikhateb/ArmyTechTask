@@ -1,44 +1,45 @@
 ﻿@model InvoiceHeaderViewModel
 
 @{
-    ViewData["Title"] = Model.InvoiceHeader.Id == 0 ? "Add New Invoice Header" : "Edit Invoice Header";
+    ViewData["Title"] = Model.Id == 0 ? "Add New Invoice Header" : "Edit Invoice Header";
 }
 
-<h1>@(Model.InvoiceHeader.Id == 0 ? "Add New Invoice Header" : "Edit Invoice Header")</h1>
+<h1>@(Model.Id == 0 ? "Add New Invoice Header" : "Edit Invoice Header")</h1>
 <hr />
-<form asp-action="@(Model.InvoiceHeader.Id == 0 ? "Add" : "Update")">
-    <input hidden asp-for="InvoiceHeader.Id" />
+<form asp-action="@(Model.Id == 0 ? "Add" : "Update")" id="invoiceForm">
+    <input hidden asp-for="Id" />
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="mb-3 row">
-        <label asp-for="InvoiceHeader.CustomerName" class="col-sm-2 col-form-label"></label>
+        <label asp-for="CustomerName" class="col-sm-2 col-form-label"></label>
         <div class="col-sm-10">
-            <input asp-for="InvoiceHeader.CustomerName" class="form-control" />
-            <span asp-validation-for="InvoiceHeader.CustomerName" class="text-danger"></span>
+            <input asp-for="CustomerName" class="form-control" />
+            <span asp-validation-for="CustomerName" class="text-danger"></span>
         </div>
     </div>
     <div class="mb-3 row">
-        <label asp-for="InvoiceHeader.Invoicedate" class="col-sm-2 col-form-label"></label>
+        <label asp-for="Invoicedate" class="col-sm-2 col-form-label"></label>
         <div class="col-sm-10">
-            <input asp-for="InvoiceHeader.Invoicedate" class="form-control" />
-            <span asp-validation-for="InvoiceHeader.Invoicedate" class="text-danger"></span>
+            <input asp-for="Invoicedate" class="form-control" />
+            <span asp-validation-for="Invoicedate" class="text-danger"></span>
         </div>
     </div>
     <div class="mb-3 row">
-        <label asp-for="InvoiceHeader.BranchId" class="col-sm-2 col-form-label"></label>
+        <label asp-for="BranchId" class="col-sm-2 col-form-label"></label>
         <div class="col-sm-10">
-            <select class="form-select" asp-for="InvoiceHeader.BranchId" asp-items="@Model.BranchListItems">
+            <select class="form-select" asp-for="BranchId" asp-items="@Model.BranchListItems">
                 <option value="0">--Select Branch Name--</option>
             </select>
-            <span asp-validation-for="InvoiceHeader.BranchId" class="text-danger"></span>
+            <span asp-validation-for="BranchId" class="text-danger"></span>
         </div>
     </div>
     <div class="mb-3 row d-none" id="cashier-container">
-        <label for="InvoiceHeader_CashierId" class="col-sm-2 col-form-label">Cashier Name</label>
+        <label for="CashierId" class="col-sm-2 col-form-label">Cashier Name</label>
         <div class="col-sm-10">
-            <select class="form-select" id="InvoiceHeader_CashierId" name="InvoiceHeader.CashierId">
+            <input hidden name="CashierId" value="@Model.CashierId" id="hidden-cashier-id" />
+            <select class="form-select" id="CashierId">
                 <option value="0">--Select Cashier Name--</option>
             </select>
-            <span asp-validation-for="InvoiceHeader.CashierId" class="text-danger"></span>
+            <span asp-validation-for="CashierId" class="text-danger"></span>
         </div>
     </div>
     <div class="mt-5">
