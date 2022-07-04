@@ -1,4 +1,7 @@
-﻿namespace WebApp.DataAccess.UnitOfWork
+﻿using WebApp.DataAccess.IService;
+using WebApp.DataAccess.Service;
+
+namespace WebApp.DataAccess.UnitOfWork
 {
     public class UnitOfWork : IUnitOfWork
     {
@@ -7,18 +10,18 @@
         public UnitOfWork(ApplicationDbContext context)
         {
             _context = context;
-            BranchRepository = new BaseRepository<Branch>(context);
-            CashierRepository = new BaseRepository<Cashier>(context);
-            CityRepository = new BaseRepository<City>(context);
-            InvoiceHeaderRepository = new BaseRepository<InvoiceHeader>(context);
-            InvoiceDetailRepository = new BaseRepository<InvoiceDetail>(context);
+            BranchSrvice = new BranchService(context);
+            CashierService = new CashierService(context);
+            CityService = new CityService(context);
+            InvoiceHeaderService = new InvoiceHeaderService(context);
+            InvoiceDetailService = new InvoiceDetailService(context);
         }
 
-        public IBaseRepository<Branch> BranchRepository { get; private set; }
-        public IBaseRepository<Cashier> CashierRepository { get; private set; }
-        public IBaseRepository<City> CityRepository { get; private set; }
-        public IBaseRepository<InvoiceHeader> InvoiceHeaderRepository { get; private set; }
-        public IBaseRepository<InvoiceDetail> InvoiceDetailRepository { get; private set; }
+        public IBranchService BranchSrvice { get; private set; }
+        public ICashierService CashierService { get; private set; }
+        public ICityService CityService { get; private set; }
+        public IInvoiceHeaderService InvoiceHeaderService { get; private set; }
+        public IInvoiceDetailService InvoiceDetailService { get; private set; }
 
         public void SaveChanges()
         {

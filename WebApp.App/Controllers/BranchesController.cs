@@ -15,7 +15,7 @@
 
         public IActionResult Index()
         {
-            BranchViewModel.Branches = _unitOfWork.BranchRepository.GetAll().ToList();
+            BranchViewModel.Branches = _unitOfWork.BranchSrvice.GetAll().ToList();
 
             if (BranchViewModel.Branches == null)
                 return NotFound("no data found");
@@ -42,14 +42,14 @@
                 return View(BranchViewModel);
             }
 
-            _unitOfWork.BranchRepository.Add(BranchViewModel.Branch);
+            _unitOfWork.BranchSrvice.Add(BranchViewModel.Branch);
             _unitOfWork.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Update(int id)
         {
-            BranchViewModel.Branch = _unitOfWork.BranchRepository.FindObject(x => x.Id == id);
+            BranchViewModel.Branch = _unitOfWork.BranchSrvice.FindObject(x => x.Id == id);
 
             LoadSelectListItems();
 
@@ -70,7 +70,7 @@
                 return View(BranchViewModel);
             }
 
-            _unitOfWork.BranchRepository.Update(BranchViewModel.Branch);
+            _unitOfWork.BranchSrvice.Update(BranchViewModel.Branch);
             _unitOfWork.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
@@ -79,11 +79,11 @@
         {
             try
             {
-                BranchViewModel.Branch = _unitOfWork.BranchRepository.FindObject(x => x.Id == id);
+                BranchViewModel.Branch = _unitOfWork.BranchSrvice.FindObject(x => x.Id == id);
                 if (BranchViewModel.Branch == null)
                     return NotFound("no data found");
 
-                _unitOfWork.BranchRepository.Remove(BranchViewModel.Branch);
+                _unitOfWork.BranchSrvice.Remove(BranchViewModel.Branch);
                 _unitOfWork.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
@@ -95,7 +95,7 @@
 
         public void LoadSelectListItems()
         {
-            BranchViewModel.ListItems = _unitOfWork.CityRepository.GetAll()
+            BranchViewModel.ListItems = _unitOfWork.CityService.GetAll()
                 .Select(city => new SelectListItem
                 {
                     Text = city.CityName,

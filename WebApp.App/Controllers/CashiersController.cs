@@ -15,7 +15,7 @@
 
         public IActionResult Index()
         {
-            CashierViewModel.Cashiers = _unitOfWork.CashierRepository.GetAll().ToList();
+            CashierViewModel.Cashiers = _unitOfWork.CashierService.GetAll().ToList();
 
             if (CashierViewModel.Cashiers == null)
                 return NotFound("no data found");
@@ -42,14 +42,14 @@
                 return View(CashierViewModel);
             }
 
-            _unitOfWork.CashierRepository.Add(CashierViewModel.Cashier);
+            _unitOfWork.CashierService.Add(CashierViewModel.Cashier);
             _unitOfWork.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Update(int id)
         {
-            CashierViewModel.Cashier = _unitOfWork.CashierRepository.FindObject(x => x.Id == id);
+            CashierViewModel.Cashier = _unitOfWork.CashierService.FindObject(x => x.Id == id);
 
             LoadSelectListItems();
 
@@ -70,7 +70,7 @@
                 return View(CashierViewModel);
             }
 
-            _unitOfWork.CashierRepository.Update(CashierViewModel.Cashier);
+            _unitOfWork.CashierService.Update(CashierViewModel.Cashier);
             _unitOfWork.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
@@ -79,11 +79,11 @@
         {
             try
             {
-                CashierViewModel.Cashier = _unitOfWork.CashierRepository.FindObject(x => x.Id == id);
+                CashierViewModel.Cashier = _unitOfWork.CashierService.FindObject(x => x.Id == id);
                 if (CashierViewModel.Cashier == null)
                     return NotFound("no data found");
 
-                _unitOfWork.CashierRepository.Remove(CashierViewModel.Cashier);
+                _unitOfWork.CashierService.Remove(CashierViewModel.Cashier);
                 _unitOfWork.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
@@ -95,7 +95,7 @@
 
         public void LoadSelectListItems()
         {
-            CashierViewModel.ListItems = _unitOfWork.BranchRepository.GetAll()
+            CashierViewModel.ListItems = _unitOfWork.BranchSrvice.GetAll()
                 .Select(branch => new SelectListItem
                 {
                     Text = branch.BranchName,

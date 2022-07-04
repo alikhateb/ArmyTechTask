@@ -1,6 +1,6 @@
 ﻿namespace WebApp.DataAccess.IRepository
 {
-    public interface IBaseRepository<T> where T : class
+    public interface IBaseService<T> where T : class
     {
         IQueryable<T> GetAll();
         IQueryable<T> GetAll(Expression<Func<T, bool>> filter);

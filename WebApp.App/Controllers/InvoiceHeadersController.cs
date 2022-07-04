@@ -17,7 +17,7 @@
 
         public IActionResult Index()
         {
-            var invoiceHeaders = _unitOfWork.InvoiceHeaderRepository.GetAll().ToList();
+            var invoiceHeaders = _unitOfWork.InvoiceHeaderService.GetAll().ToList();
             if (invoiceHeaders == null)
                 return NotFound("no data found");
 
@@ -26,7 +26,7 @@
 
         public IActionResult Details(int id)
         {
-            var invoiceHeader = _unitOfWork.InvoiceHeaderRepository.FindObject(x => x.Id == id);
+            var invoiceHeader = _unitOfWork.InvoiceHeaderService.FindObject(x => x.Id == id);
             if (invoiceHeader == null)
                 return NotFound("no data found");
 
@@ -40,8 +40,6 @@
 
             return View(InvoiceHeaderViewModel);
         }
-
-
 
         public IActionResult Add()
         {
@@ -63,26 +61,26 @@
             }
 
             if (InvoiceHeaderViewModel.BranchId != 0 && InvoiceHeaderViewModel.CashierId != 0 &&
-                !_unitOfWork.CashierRepository.GetAll(b => b.BranchId == InvoiceHeaderViewModel.BranchId)
+                !_unitOfWork.CashierService.GetAll(b => b.BranchId == InvoiceHeaderViewModel.BranchId)
                 .Any(c => c.Id == InvoiceHeaderViewModel.CashierId))
             {
                 LoadBranchItems();
 
-                ModelState.AddModelError("", $"{_unitOfWork.CashierRepository.FindObject(c => c.Id == InvoiceHeaderViewModel.CashierId).CashierName} " +
-                    $"does not exist in {_unitOfWork.BranchRepository.FindObject(c => c.Id == InvoiceHeaderViewModel.BranchId).BranchName}!");
+                ModelState.AddModelError("", $"{_unitOfWork.CashierService.FindObject(c => c.Id == InvoiceHeaderViewModel.CashierId).CashierName} " +
+                    $"does not exist in {_unitOfWork.BranchSrvice.FindObject(c => c.Id == InvoiceHeaderViewModel.BranchId).BranchName}!");
 
                 return View("Add_Update", InvoiceHeaderViewModel);
             }
 
             var invoiceHeader = _mapper.Map<InvoiceHeader>(InvoiceHeaderViewModel);
-            _unitOfWork.InvoiceHeaderRepository.Add(invoiceHeader);
+            _unitOfWork.InvoiceHeaderService.Add(invoiceHeader);
             _unitOfWork.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Update(int id)
         {
-            var invoiceHeader = _unitOfWork.InvoiceHeaderRepository.FindObject(x => x.Id == id);
+            var invoiceHeader = _unitOfWork.InvoiceHeaderService.FindObject(x => x.Id == id);
             if (invoiceHeader == null)
                 return NotFound("no data found");
 
@@ -104,19 +102,19 @@
             }
 
             if (InvoiceHeaderViewModel.BranchId != 0 && InvoiceHeaderViewModel.CashierId != 0 &&
-                !_unitOfWork.CashierRepository.GetAll(b => b.BranchId == InvoiceHeaderViewModel.BranchId)
-                .Any(c => c.Id == InvoiceHeaderViewModel.CashierId))
+                !_unitOfWork.CashierService.GetAll(b => b.BranchId == InvoiceHeaderViewModel.BranchId)
+                                           .Any(c => c.Id == InvoiceHeaderViewModel.CashierId))
             {
                 LoadBranchItems();
 
-                ModelState.AddModelError("", $"{_unitOfWork.CashierRepository.FindObject(c => c.Id == InvoiceHeaderViewModel.CashierId).CashierName} " +
-                    $"does not exist in {_unitOfWork.BranchRepository.FindObject(c => c.Id == InvoiceHeaderViewModel.BranchId).BranchName}!");
+                ModelState.AddModelError("", $"{_unitOfWork.CashierService.FindObject(c => c.Id == InvoiceHeaderViewModel.CashierId).CashierName} " +
+                    $"does not exist in {_unitOfWork.BranchSrvice.FindObject(c => c.Id == InvoiceHeaderViewModel.BranchId).BranchName}!");
 
                 return View("Add_Update", InvoiceHeaderViewModel);
             }
 
             var invoiceHeader = _mapper.Map<InvoiceHeader>(InvoiceHeaderViewModel);
-            _unitOfWork.InvoiceHeaderRepository.Update(invoiceHeader);
+            _unitOfWork.InvoiceHeaderService.Update(invoiceHeader);
             _unitOfWork.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
@@ -125,11 +123,11 @@
         {
             try
             {
-                var invoiceHeader = _unitOfWork.InvoiceHeaderRepository.FindObject(x => x.Id == id);
+                var invoiceHeader = _unitOfWork.InvoiceHeaderService.FindObject(x => x.Id == id);
                 if (invoiceHeader == null)
                     return NotFound("no data found");
 
-                _unitOfWork.InvoiceHeaderRepository.Remove(invoiceHeader);
+                _unitOfWork.InvoiceHeaderService.Remove(invoiceHeader);
                 _unitOfWork.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
@@ -141,7 +139,7 @@
 
         public IActionResult LoadSpecificCashierSelectListItems(int branchId)
         {
-            var listOfCashiers = _unitOfWork.CashierRepository.GetAll(cashier => cashier.BranchId == branchId)
+            var listOfCashiers = _unitOfWork.CashierService.GetAll(cashier => cashier.BranchId == branchId)
                 .Select(cashier => new
                 {
                     cashier.CashierName,
@@ -153,7 +151,7 @@
 
         public void LoadBranchItems()
         {
-            InvoiceHeaderViewModel.BranchListItems = _unitOfWork.BranchRepository.GetAll()
+            InvoiceHeaderViewModel.BranchListItems = _unitOfWork.BranchSrvice.GetAll()
                 .Select(branch => new SelectListItem
                 {
                     Text = branch.BranchName,
@@ -161,18 +159,6 @@
                     Selected = InvoiceHeaderViewModel != null && InvoiceHeaderViewModel.BranchId == branch.Id,
                 }).ToList();
         }
-
-        //public void LoadCashierItems(int branchId)
-        //{
-        //    InvoiceHeaderViewModel.CashierListItems = _unitOfWork.CashierRepository.GetAll(cashier => cashier.BranchId == branchId)
-        //        .Select(cashier => new SelectListItem
-        //        {
-        //            Text = cashier.CashierName,
-        //            Value = cashier.Id.ToString(),
-        //            Selected = InvoiceHeaderViewModel.InvoiceHeader != null && InvoiceHeaderViewModel.InvoiceHeader.CashierId == cashier.Id
-        //        }).ToList();
-        //}
-
 
     }
 }

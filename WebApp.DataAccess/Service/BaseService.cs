@@ -1,10 +1,10 @@
 ﻿namespace WebApp.DataAccess.Repository
 {
-    public class BaseRepository<T> : IBaseRepository<T> where T : class
+    public class BaseService<T> : IBaseService<T> where T : class
     {
         private readonly ApplicationDbContext _context;
 
-        public BaseRepository(ApplicationDbContext context)
+        public BaseService(ApplicationDbContext context)
         {
             _context = context;
         }

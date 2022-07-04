@@ -1,12 +1,14 @@
-﻿namespace WebApp.DataAccess.UnitOfWork
+﻿using WebApp.DataAccess.IService;
+
+namespace WebApp.DataAccess.UnitOfWork
 {
     public interface IUnitOfWork : IDisposable
     {
-        IBaseRepository<Branch> BranchRepository { get; }
-        IBaseRepository<Cashier> CashierRepository { get; }
-        IBaseRepository<City> CityRepository { get; }
-        IBaseRepository<InvoiceHeader> InvoiceHeaderRepository { get; }
-        IBaseRepository<InvoiceDetail> InvoiceDetailRepository { get; }
+        IBranchService BranchSrvice { get; }
+        ICashierService CashierService { get; }
+        ICityService CityService { get; }
+        IInvoiceHeaderService InvoiceHeaderService { get; }
+        IInvoiceDetailService InvoiceDetailService { get; }
         void SaveChanges();
     }
 }

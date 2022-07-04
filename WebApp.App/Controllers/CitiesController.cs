@@ -10,7 +10,7 @@
         }
         public IActionResult Index()
         {
-            var cities = _unitOfWork.CityRepository.GetAll().ToList();
+            var cities = _unitOfWork.CityService.GetAll().ToList();
             if (cities == null)
                 return NotFound("no data found");
 
@@ -30,14 +30,14 @@
             if (!ModelState.IsValid)
                 return View(city);
 
-            _unitOfWork.CityRepository.Add(city);
+            _unitOfWork.CityService.Add(city);
             _unitOfWork.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Update(int id)
         {
-            City city = _unitOfWork.CityRepository.FindObject(x => x.Id == id);
+            City city = _unitOfWork.CityService.FindObject(x => x.Id == id);
             if (city == null)
                 return NotFound("no data found");
 
@@ -51,7 +51,7 @@
             if (!ModelState.IsValid)
                 return View(city);
 
-            _unitOfWork.CityRepository.Update(city);
+            _unitOfWork.CityService.Update(city);
             _unitOfWork.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
@@ -60,11 +60,11 @@
         {
             try
             {
-                City city = _unitOfWork.CityRepository.FindObject(x => x.Id == id);
+                City city = _unitOfWork.CityService.FindObject(x => x.Id == id);
                 if (city == null)
                     return NotFound("no data found");
 
-                _unitOfWork.CityRepository.Remove(city);
+                _unitOfWork.CityService.Remove(city);
                 _unitOfWork.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }

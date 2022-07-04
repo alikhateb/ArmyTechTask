@@ -11,7 +11,7 @@
 
         public IActionResult Index()
         {
-            var invoiceDetails = _unitOfWork.InvoiceDetailRepository.GetAll().ToList();
+            var invoiceDetails = _unitOfWork.InvoiceDetailService.GetAll().ToList();
             if (invoiceDetails == null)
                 return NotFound("no data found");
 
@@ -40,7 +40,7 @@
                 return View("Add_Update", invoiceDetail);
             }
 
-            _unitOfWork.InvoiceDetailRepository.Add(invoiceDetail);
+            _unitOfWork.InvoiceDetailService.Add(invoiceDetail);
             _unitOfWork.SaveChanges();
             return Redirect(returnUrl);
         }
@@ -49,7 +49,7 @@
         {
             ViewBag.returnUrl = Request.Headers["Referer"].ToString();
 
-            InvoiceDetail invoiceDetail = _unitOfWork.InvoiceDetailRepository.FindObject(x => x.Id == id);
+            InvoiceDetail invoiceDetail = _unitOfWork.InvoiceDetailService.FindObject(x => x.Id == id);
 
             if (invoiceDetail == null)
                 return NotFound("no data found");
@@ -66,7 +66,7 @@
                 return View("Add_Update", invoiceDetail);
             }
 
-            _unitOfWork.InvoiceDetailRepository.Update(invoiceDetail);
+            _unitOfWork.InvoiceDetailService.Update(invoiceDetail);
             _unitOfWork.SaveChanges();
             return Redirect(returnUrl);
         }
@@ -75,11 +75,11 @@
         {
             try
             {
-                InvoiceDetail invoiceDetail = _unitOfWork.InvoiceDetailRepository.FindObject(x => x.Id == invoiceDetailId);
+                InvoiceDetail invoiceDetail = _unitOfWork.InvoiceDetailService.FindObject(x => x.Id == invoiceDetailId);
                 if (invoiceDetail == null)
                     return NotFound("no data found");
 
-                _unitOfWork.InvoiceDetailRepository.Remove(invoiceDetail);
+                _unitOfWork.InvoiceDetailService.Remove(invoiceDetail);
                 _unitOfWork.SaveChanges();
                 return RedirectToAction(actionName: "Details", controllerName: "InvoiceHeaders", routeValues: new { id = invoiceHeaderId });
             }
