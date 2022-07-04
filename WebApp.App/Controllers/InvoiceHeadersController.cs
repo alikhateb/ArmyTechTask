@@ -62,6 +62,18 @@
                 return View("Add_Update", InvoiceHeaderViewModel);
             }
 
+            if (InvoiceHeaderViewModel.BranchId != 0 && InvoiceHeaderViewModel.CashierId != 0 &&
+                !_unitOfWork.CashierRepository.GetAll(b => b.BranchId == InvoiceHeaderViewModel.BranchId)
+                .Any(c => c.Id == InvoiceHeaderViewModel.CashierId))
+            {
+                LoadBranchItems();
+
+                ModelState.AddModelError("", $"{_unitOfWork.CashierRepository.FindObject(c => c.Id == InvoiceHeaderViewModel.CashierId).CashierName} " +
+                    $"does not exist in {_unitOfWork.BranchRepository.FindObject(c => c.Id == InvoiceHeaderViewModel.BranchId).BranchName}!");
+
+                return View("Add_Update", InvoiceHeaderViewModel);
+            }
+
             var invoiceHeader = _mapper.Map<InvoiceHeader>(InvoiceHeaderViewModel);
             _unitOfWork.InvoiceHeaderRepository.Add(invoiceHeader);
             _unitOfWork.SaveChanges();
@@ -87,6 +99,18 @@
             if (!ModelState.IsValid)
             {
                 LoadBranchItems();
+
+                return View("Add_Update", InvoiceHeaderViewModel);
+            }
+
+            if (InvoiceHeaderViewModel.BranchId != 0 && InvoiceHeaderViewModel.CashierId != 0 &&
+                !_unitOfWork.CashierRepository.GetAll(b => b.BranchId == InvoiceHeaderViewModel.BranchId)
+                .Any(c => c.Id == InvoiceHeaderViewModel.CashierId))
+            {
+                LoadBranchItems();
+
+                ModelState.AddModelError("", $"{_unitOfWork.CashierRepository.FindObject(c => c.Id == InvoiceHeaderViewModel.CashierId).CashierName} " +
+                    $"does not exist in {_unitOfWork.BranchRepository.FindObject(c => c.Id == InvoiceHeaderViewModel.BranchId).BranchName}!");
 
                 return View("Add_Update", InvoiceHeaderViewModel);
             }
@@ -149,13 +173,6 @@
         //        }).ToList();
         //}
 
-        //if (!_unitOfWork.CashierRepository.GetAll(b => b.BranchId == InvoiceHeaderViewModel.BranchId)
-        //    .Any(c => c.Id == InvoiceHeaderViewModel.CashierId))
-        //{
-        //    LoadBranchItems();
-        //    ModelState.AddModelError("", $"{_unitOfWork.CashierRepository.FindObject(c => c.Id == InvoiceHeaderViewModel.CashierId).CashierName} " +
-        //        $"does not exist in {_unitOfWork.BranchRepository.FindObject(c => c.Id == InvoiceHeaderViewModel.BranchId).BranchName}!");
-        //    return View("Add_Update", InvoiceHeaderViewModel);
-        //}
+
     }
 }
